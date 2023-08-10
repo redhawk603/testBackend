@@ -15,6 +15,9 @@ async function main() {
     const client = new MongoClient(Mongo_URL);
     await client.connect(); 
     console.log('Connected to database');
+    app.get("/", (req, res) => {
+        res.send("Welcome to the QuizCard API")
+    })
     app.get('/subscribers', async (req, res) => {
         const subscribers = await client.db("quizcard0").collection("subscribers").findOne()
         console.log(subscribers)

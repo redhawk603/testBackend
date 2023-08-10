@@ -30,9 +30,17 @@ async function main() {
     })
     app.post('/userData', async (req, res) => {
         const userData = req.body;
+        const existID = await client.db("quizcard0").collection("userData").findOne({ email: userData.email });
+        if (existID) {
+            console.log("User data already exists.")
+            res.send({msg:"User data already exists."})
+        }
+        else {
         const result = await client.db("quizcard0").collection("userData").insertOne(userData);
         console.log(`New user data added with the id - ${result.insertedId}`);
-        res.send(result);
+        res.send({msg:"User Created!",result});
+        }
+        
     })
     app.put('/userData/:id', async (req, res) => {
         const userID = new ObjectId(req.params.id);

@@ -38,7 +38,7 @@ async function main() {
         else {
         const result = await client.db("quizcard0").collection("userData").insertOne(userData);
         console.log(`New user data added with the id - ${result.insertedId}`);
-        res.send({msg:"User Created!",result});
+        res.send({msg:"User created!",result});
         }
         
     })

@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
 import cors from "cors"
-import {MongoClient, ObjectId} from "mongodb"
+import {CURSOR_FLAGS, MongoClient, ObjectId} from "mongodb"
 import express from "express"
 const app = express()
 dotenv.config()
@@ -55,6 +55,14 @@ async function main() {
         const result = await client.db("quizcard0").collection("userData").deleteOne({ _id: userID });
         console.log(`User data deleted with the id - ${req.params.id}`);
         res.send(result);
+    })
+
+    app.post('/api/update/:id', async (req, res) => {
+        const userID = new ObjectId(req.params.id);
+        const updateData = req.body;
+        const result = await client.db("quizcard0").collection("userData").updateOne({ _id: userID }, { $set: updateData });
+        console.log(`User data modified with the id - ${result}`);
+        return res.send(result);
     })
 }
 const client = await main()

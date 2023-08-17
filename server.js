@@ -65,6 +65,13 @@ async function main() {
         console.log(`User data modified with the id - ${result}`);
         return res.send(result);
     })
+
+    app.post('/views', async (req, res) => {
+        const viewData = req.body;
+        const result = await client.db("quizcard0").collection("views").insertOne(viewData);
+        console.log(`User data modified with the id - ${result}`);
+        return res.send(result);
+    })
 }
 const client = await main()
 

@@ -58,7 +58,8 @@ async function main() {
     })
 
     app.post('/api/update/:id', async (req, res) => {
-        const userID = new ObjectId(req.params.id);
+        const userID = new ObjectId(req.params.userId);
+        console.log(userID, "userID")
         const updateData = req.body;
         const result = await client.db("quizcard0").collection("userData").updateOne({ _id: userID }, { $set: updateData });
         console.log(`User data modified with the id - ${result}`);

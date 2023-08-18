@@ -66,17 +66,77 @@ async function main() {
         return res.send(result);
     })
 
-    app.post('/views', async (req, res) => {
-        const viewData = req.body;
-        const result = await client.db("quizcard0").collection("views").insertOne(viewData);
-        console.log(`User data modified with the id - ${result}`);
-        return res.send(result);
+    app.post('/views/update', async (req, res) => {
+
+
+        // return res.send(req.body)
+
+        // const id = new ObjectId(req.params.id)
+        const id = new ObjectId('64dde98dc325c9db62e67b68')
+
+        
+    
+    
+        const filter = { _id: id }
+        
+
+
+        const update = {
+            $inc: {
+                ...req.body,
+
+            }
+        }
+
+        // return res.send(update);
+        
+        const findID = await client.db("quizcard0").collection("views").find({_id : id}).toArray();
+        if (findID.length > 0) {
+            console.log("User data already exists.")
+            const result = await client.db("quizcard0").collection("views").updateMany(filter, update);
+            res.send({msg:"User data already exists."})
+
+        }
+        else {
+        const result = await client.db("quizcard0").collection("views").insertOne(
+            {
+                _id : id,
+                GryffindorViews : 0,
+                RavenclawViews : 0,
+                HufflepuffViews : 0,
+                SlytherinViews : 0,
+                ...req.body,
+
+            }
+
+            );
+            res.send(result)
+        }
+        console.log(findID)
+        
+        
+        
+        // res.send(result)
+        // res.send('update')
+    
+    
+    })
+
+    app.get('/hello/hello', (req, res) => {
+        res.send("hi")
+    })
+
+    app.get('/views', async (req, res) => {
+        const views = await client.db("quizcard0").collection("views").find().toArray()
+
+        if(views.length === 0) throw new Error('No views found');
+
+        return  res.send(views[0])
+    
     })
 }
-const client = await main()
 
 
 
-
-
-app.listen(3000, () => console.log('Server running on port 3000'))
+main()
+app.listen(3000, () => console.log('Server running on port 3000')) 

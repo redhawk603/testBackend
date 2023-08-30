@@ -2,8 +2,10 @@ import dotenv from "dotenv"
 import cors from "cors"
 import {CURSOR_FLAGS, MongoClient, ObjectId} from "mongodb"
 import express from "express"
+import OpenAI from 'openai';
 const app = express()
 dotenv.config()
+
 
 
 app.use(express.json())
@@ -133,6 +135,26 @@ async function main() {
 
         return  res.send(views[0])
     
+    })
+
+    app.post('/api/ai', async (req, res) => {
+        const apikey = "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"
+        const query = req.body.query;
+
+        const openai = new OpenAI({
+            apiKey: apikey
+        });
+
+        const completion = await openai.chat.completions.create({
+            messages: [{ role: 'user', content: `write a description for a ${query} and do not write any other text before or after`}],
+            model: 'gpt-3.5-turbo',
+          });
+
+          res.send(completion.choices[0])
+        
+        
+        console.log(completion.choices);
+
     })
 }
 
